@@ -25,7 +25,11 @@ function partial($name, $vars=array()) {
 // Print an URL
 function url($path) {
   global $phroto;
-  echo $phroto->settings['base_url'].$path;
+  if ($phroto->tmp_mode === 'static') {
+    echo $path;
+  } else {
+    echo $phroto->settings['base_url'].$path;
+  }
 }
 
 // Returns the URL of a page (dynamic / static)
