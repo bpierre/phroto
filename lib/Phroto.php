@@ -57,7 +57,7 @@ class Phroto {
   }
 
   private function get_pages_list() {
-    $exclude = array('.', '..');
+    $exclude = array('.', '..', '.DS_Store');
     $filtered = array_filter(scandir($this->settings['tpl_dir']), function($item) use (&$exclude) {
       return !in_array($item, $exclude) && $item[0] !== '_';
     });
