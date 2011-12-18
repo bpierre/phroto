@@ -1,9 +1,10 @@
 <?php
 
 // Init template context. Do not use in templates.
-function phroto_init_context($phr) {
-  global $phroto;
+function phroto_init_context($phr, $tpl) {
+  global $phroto, $tpl_path;
   $phroto = $phr;
+  $tpl_path = $tpl;
 }
 
 // Set a layout
@@ -22,20 +23,28 @@ function partial($name, $vars=array()) {
   require $phroto->settings['tpl_dir'].'/_partials/'. $name .'.php';
 }
 
-// Print an URL
+// Returns an URL
 function url($path) {
   global $phroto;
   if ($phroto->tmp_mode === 'static') {
-    echo $path;
+    return $path;
   } else {
-    echo $phroto->settings['base_url'].$path;
+    return $phroto->settings['base_url'].$path;
   }
 }
 
 // Returns the URL of a page (dynamic / static)
 function page($path) {
-  global $phroto;
-  return ($phroto->tmp_mode === 'static')? url($path.'.html') : url('?p='.$path);
+  global $phroto, $tpl_path;
+  if ($phroto->tmp_mode === 'static') {
+    for ($i = substr_count($tpl_path, '/'); $i > 0; $i--) {
+      $path = '../' . $path;
+    }
+    return url($path.'.html');
+  } else {
+    $path = str_replace('?', '&', $path);
+    return url('?p='.$path);
+  }
 }
 
 //
